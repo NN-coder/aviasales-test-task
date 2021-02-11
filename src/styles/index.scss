@@ -1,22 +1,19 @@
 @import './normalize.scss';
 @import './fonts.scss';
-
-$bg: #f3f7fa;
-$blue: #2196f3;
-$textColor: #4a4a4a;
-$textColorSecondary: #a0b0b9;
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
-  @media screen and (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 :root {
   font-size: 10px;
   font-family: 'Open Sans', sans-serif;
+
+  --bg: #f3f7fa;
+  --blue: #2196f3;
+  --light-blue: #f1fcff;
+  --text-color: #4a4a4a;
+  --text-color-primary: #a0b0b9;
 }
 #root {
   display: grid;
@@ -27,14 +24,18 @@ $textColorSecondary: #a0b0b9;
   padding: 50px 100px;
 }
 body {
-  color: $textColor;
-  background-color: $bg;
+  color: var(--text-color);
+  background-color: var(--bg);
+}
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 ul {
   list-style: none;
 }
 .standard-block {
-  padding: 20px;
   background-color: white;
   border-radius: 5px;
 }

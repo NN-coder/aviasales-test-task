@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import './style.scss';
+import React from 'react';
+import './Logo.scss';
 
-export const Logo: FC = () => (
+export const Logo: React.FC = () => (
   <div className="logo">
     <svg width="82" height="89" viewBox="0 0 82 89" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_d)">

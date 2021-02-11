@@ -7,12 +7,14 @@
   "repository": "git@github.com:NN-coder/aviasales-test-task.git",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.2.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "shortid": "^2.2.16",
     "web-vitals": "^1.1.0"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
     "@types/node": "^14.14.25",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
