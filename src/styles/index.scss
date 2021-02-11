@@ -1,0 +1,40 @@
+@import './normalize.scss';
+@import './fonts.scss';
+
+$bg: #f3f7fa;
+$blue: #2196f3;
+$textColor: #4a4a4a;
+$textColorSecondary: #a0b0b9;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+:root {
+  font-size: 10px;
+  font-family: 'Open Sans', sans-serif;
+}
+#root {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 50px 20px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 50px 100px;
+}
+body {
+  color: $textColor;
+  background-color: $bg;
+}
+ul {
+  list-style: none;
+}
+.standard-block {
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+}
