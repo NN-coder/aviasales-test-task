@@ -1,0 +1,28 @@
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  &__icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+    color: var(--blue);
+    &--loading {
+      animation: rotate 0.8s linear infinite;
+      @media screen and (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

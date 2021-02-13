@@ -10,6 +10,7 @@ export interface ITicket {
   price: number;
   carrier: string;
   segments: [ISegment, ISegment];
+  id: string;
 }
 
 export interface ITicketsState {
