@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useState } from 'react';
-import { generate } from 'shortid';
+import shortid from 'shortid';
 import classnames from 'classnames';
-import './Filter.scss';
+import './style.scss';
 
 interface Option {
   key: string;
@@ -10,11 +10,11 @@ interface Option {
 }
 
 const options: Option[] = [
-  { text: 'Все', key: generate() },
-  { text: 'Без пересадок', key: generate() },
-  { text: '1 пересадка', key: generate() },
-  { text: '2 пересадки', key: generate() },
-  { text: '3 пересадки', key: generate() },
+  { text: 'Все', key: shortid.generate() },
+  { text: 'Без пересадок', key: shortid.generate() },
+  { text: '1 пересадка', key: shortid.generate() },
+  { text: '2 пересадки', key: shortid.generate() },
+  { text: '3 пересадки', key: shortid.generate() },
 ];
 
 export const Filter: React.FC = () => {
@@ -43,11 +43,16 @@ export const Filter: React.FC = () => {
   }, []);
 
   return (
-    <div className="standard-block filter">
+    <aside className="standard-block filter">
       <div className="filter__title">Количество пересадок</div>
-      <ul className="filter-list">
+      <ul className="filter-list" role="listbox">
         {options.map(({ text, key }, index) => (
-          <li key={key} className="filter-list__item">
+          <li
+            key={key}
+            role="option"
+            aria-selected={checked.includes(index)}
+            className="filter-list__item"
+          >
             <button onClick={createClickHandler(index)} type="button" className="filter-check">
               <span className={getCheckBoxClass(index)} />
               {text}
@@ -55,6 +60,6 @@ export const Filter: React.FC = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 };
