@@ -1,8 +1,12 @@
 import React from 'react';
-import './style.scss';
+import styled from 'styled-components/macro';
 
-export const Logo: React.FC = () => (
-  <div className="logo">
+export interface IProps {
+  className?: string;
+}
+
+const Logo: React.FC<IProps> = ({ className }) => (
+  <div className={className}>
     <svg width="82" height="89" viewBox="0 0 82 89" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_d)">
         <path
@@ -170,3 +174,8 @@ export const Logo: React.FC = () => (
     </svg>
   </div>
 );
+
+export const StyledLogo = styled(Logo)`
+  grid-column: 1 / -1;
+  text-align: center;
+`;

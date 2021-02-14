@@ -1,21 +1,45 @@
 import React from 'react';
+import styled, { keyframes, css } from 'styled-components/macro';
 import { BiErrorAlt } from 'react-icons/bi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import './style.scss';
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+`;
+const loadingStyles = css`
+  animation: ${rotate} 0.8s linear infinite;
+`;
+
+const Placeholder = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+`;
+const Icon = styled.svg.attrs({ 'aria-hidden': true })<{ loading?: boolean }>`
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  color: var(--blue);
+  ${({ loading }) => (loading ? loadingStyles : '')}
+`;
 
 export const ErrorPlaceholder: React.FC = () => (
-  <div className="placeholder">
-    <BiErrorAlt aria-hidden="true" className="placeholder__icon" />
+  <Placeholder>
+    <Icon as={BiErrorAlt} />
     Упс, что-то пошло не так!
-  </div>
+  </Placeholder>
 );
 
 export const LoadingPlaceholder: React.FC = () => (
-  <div className="placeholder">
-    <AiOutlineLoading3Quarters
-      aria-hidden="true"
-      className="placeholder__icon placeholder__icon--loading"
-    />
+  <Placeholder>
+    <Icon as={AiOutlineLoading3Quarters} loading />
     Загрузка...
-  </div>
+  </Placeholder>
 );

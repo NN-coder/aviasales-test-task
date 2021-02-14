@@ -1,12 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
 import { store } from '../../store';
+import { StandardBlock } from '../StandardBlock';
 import { ErrorPlaceholder, LoadingPlaceholder } from './Placeholders';
-import { Sort } from './Sort';
-import { Ticket } from './Ticket';
-import './style.scss';
+import { StyledSort } from './StyledSort';
+import { StyledTicket } from './StyledTicket';
 
-export const Main: React.FC = observer(() => {
+const MainBtn = styled(StandardBlock)`
+  height: 50px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background-color: var(--blue);
+`;
+
+export interface IProps {
+  className?: string;
+}
+
+const Main: React.FC<IProps> = observer(({ className }) => {
   const { tickets, searchId, sortedTickets } = store;
 
   const isLoading = searchId.isLoading || tickets.isLoading;
@@ -22,25 +37,31 @@ export const Main: React.FC = observer(() => {
   const showMoreTickets = useCallback(() => showTickets((prevVal) => prevVal + 5), []);
 
   return (
-    <main className="main">
-      <Sort />
+    <main className={className}>
+      <StyledSort />
 
       {sortedTickets.slice(0, ticketsToShow).map((ticket) => (
-        <Ticket key={ticket.id} {...ticket} />
+        <StyledTicket key={ticket.id} {...ticket} />
       ))}
 
       {isLoading && <LoadingPlaceholder />}
       {hasError && <ErrorPlaceholder />}
 
       {!tickets.isCompleted && (
-        <button
+        <MainBtn
+          as="button"
           type="button"
-          className="standard-block main__btn"
           onClick={hasError ? store.fetchTickets : showMoreTickets}
         >
           {hasError ? 'Попробовать ещё раз' : 'Показать еще 5 билетов'}
-        </button>
+        </MainBtn>
       )}
     </main>
   );
 });
+
+export const StyledMain = styled(Main)`
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+`;

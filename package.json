@@ -7,13 +7,13 @@
   "repository": "git@github.com:NN-coder/aviasales-test-task.git",
   "license": "MIT",
   "dependencies": {
-    "classnames": "^2.2.6",
     "mobx": "^6.1.6",
     "mobx-react-lite": "^3.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",
     "shortid": "^2.2.16",
+    "styled-components": "^5.2.1",
     "web-vitals": "^1.1.0"
   },
   "devDependencies": {
@@ -22,6 +22,7 @@
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
     "@types/shortid": "^0.0.29",
+    "@types/styled-components": "^5.1.7",
     "@types/webpack": "^4.41.26",
     "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
@@ -38,16 +39,15 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-sonarjs": "^0.5.0",
     "gh-pages": "^3.1.0",
-    "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
     "react-scripts": "^4.0.2",
     "stylelint": "^13.10.0",
     "stylelint-a11y": "^1.2.3",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-rational-order": "^0.1.2",
-    "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-config-standard": "^20.0.0",
-    "stylelint-scss": "^3.19.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-order": "^4.1.0",
     "typescript": "^4.1.5"
   },
   "scripts": {
