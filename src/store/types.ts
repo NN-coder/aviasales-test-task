@@ -32,3 +32,5 @@ export interface ITicketsResponse {
 export interface ISearchIdResponse {
   searchId: string;
 }
+
+export type TSort = 'cheapest' | 'fastest' | 'optimal';

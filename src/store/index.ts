@@ -1,6 +1,6 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import shortid from 'shortid';
-import { ISearchIdState, ITicketsState, ISearchIdResponse, ITicketsResponse } from './types';
+import { ISearchIdState, ITicketsState, ISearchIdResponse, ITicketsResponse, TSort } from './types';
 
 class Store {
   searchId: ISearchIdState = {
@@ -15,6 +15,8 @@ class Store {
     hasError: false,
     value: [],
   };
+
+  currentSort: TSort = 'cheapest';
 
   async fetchSearchId() {
     this.searchId = { ...this.searchId, isLoading: true };
@@ -59,15 +61,40 @@ class Store {
     this.tickets = { ...this.tickets, isLoading: false, hasError: true };
   }
 
+  setCurrentSort(by: TSort) {
+    this.currentSort = by;
+  }
+
+  get sortedTickets() {
+    const tickets = this.tickets.value.slice();
+
+    if (this.currentSort === 'cheapest') {
+      return tickets.sort((a, b) => a.price - b.price);
+    }
+
+    if (this.currentSort === 'fastest') {
+      return tickets.sort(
+        ({ segments: [a1, a2] }, { segments: [b1, b2] }) =>
+          a1.duration + a2.duration - b1.duration - b2.duration
+      );
+    }
+
+    return tickets;
+  }
+
   constructor() {
     this.fetchSearchId = this.fetchSearchId.bind(this);
     this.fetchTickets = this.fetchTickets.bind(this);
+    this.setCurrentSort = this.setCurrentSort.bind(this);
 
     makeObservable(this, {
       searchId: observable,
       tickets: observable,
+      currentSort: observable,
       fetchSearchId: action,
       fetchTickets: action,
+      setCurrentSort: action,
+      sortedTickets: computed,
     });
   }
 }

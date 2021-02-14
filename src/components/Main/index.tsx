@@ -2,14 +2,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { store } from '../../store';
 import { ErrorPlaceholder, LoadingPlaceholder } from './Placeholders';
+import { Sort } from './Sort';
 import { Ticket } from './Ticket';
 import './style.scss';
 
 export const Main: React.FC = observer(() => {
-  const { tickets, searchId } = store;
+  const { tickets, searchId, sortedTickets } = store;
 
-  const hasError = searchId.hasError || tickets.hasError;
   const isLoading = searchId.isLoading || tickets.isLoading;
+  // Loading state prevails over the error state
+  const hasError = (searchId.hasError || tickets.hasError) && !isLoading;
 
   const [ticketsToShow, showTickets] = useState(5);
 
@@ -21,12 +23,14 @@ export const Main: React.FC = observer(() => {
 
   return (
     <main className="main">
-      {tickets.value.slice(0, ticketsToShow).map((ticket) => (
+      <Sort />
+
+      {sortedTickets.slice(0, ticketsToShow).map((ticket) => (
         <Ticket key={ticket.id} {...ticket} />
       ))}
 
       {isLoading && <LoadingPlaceholder />}
-      {hasError && !isLoading && <ErrorPlaceholder />}
+      {hasError && <ErrorPlaceholder />}
 
       {!tickets.isCompleted && (
         <button
