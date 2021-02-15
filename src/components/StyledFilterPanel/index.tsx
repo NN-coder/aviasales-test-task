@@ -53,7 +53,7 @@ export interface IProps {
   className?: string;
 }
 
-const Filter: React.FC<IProps> = ({ className }) => {
+const FilterPanel: React.FC<IProps> = ({ className }) => {
   const [checked, toggleCheck] = useState<number[]>([]);
 
   const createClickHandler = useCallback((num: number) => {
@@ -87,7 +87,7 @@ const Filter: React.FC<IProps> = ({ className }) => {
   );
 };
 
-export const StyledFilter = styled(Filter)`
+export const StyledFilterPanel = styled(FilterPanel)`
   padding: 20px 0;
   font-size: 1.3em;
 `;

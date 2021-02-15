@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
-import { store } from '../../store';
+import { searchIdStore, ticketsStore, sortedTicketsStore } from '../../stores';
 import { StandardBlock } from '../StandardBlock';
 import { ErrorPlaceholder, LoadingPlaceholder } from './Placeholders';
-import { StyledSort } from './StyledSort';
+import { StyledSortingPanel } from './StyledSortingPanel';
 import { StyledTicket } from './StyledTicket';
 
 const MainBtn = styled(StandardBlock)`
@@ -22,7 +22,9 @@ export interface IProps {
 }
 
 const Main: React.FC<IProps> = observer(({ className }) => {
-  const { tickets, searchId, sortedTickets } = store;
+  const { searchId } = searchIdStore;
+  const { tickets, fetchTickets } = ticketsStore;
+  const { sortedTickets } = sortedTicketsStore;
 
   const isLoading = searchId.isLoading || tickets.isLoading;
   // Loading state prevails over the error state
@@ -31,14 +33,15 @@ const Main: React.FC<IProps> = observer(({ className }) => {
   const [ticketsToShow, showTickets] = useState(5);
 
   useEffect(() => {
-    store.fetchTickets();
+    fetchTickets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showMoreTickets = useCallback(() => showTickets((prevVal) => prevVal + 5), []);
 
   return (
     <main className={className}>
-      <StyledSort />
+      <StyledSortingPanel />
 
       {sortedTickets.slice(0, ticketsToShow).map((ticket) => (
         <StyledTicket key={ticket.id} {...ticket} />
@@ -48,11 +51,7 @@ const Main: React.FC<IProps> = observer(({ className }) => {
       {hasError && <ErrorPlaceholder />}
 
       {!tickets.isCompleted && (
-        <MainBtn
-          as="button"
-          type="button"
-          onClick={hasError ? store.fetchTickets : showMoreTickets}
-        >
+        <MainBtn as="button" type="button" onClick={hasError ? fetchTickets : showMoreTickets}>
           {hasError ? 'Попробовать ещё раз' : 'Показать еще 5 билетов'}
         </MainBtn>
       )}

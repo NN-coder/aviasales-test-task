@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyledFilter } from './StyledFilter';
+import { StyledFilterPanel } from './StyledFilterPanel';
 import { StyledLogo } from './StyledLogo';
 import { StyledMain } from './Main';
 
 export const App: React.FC = () => (
   <>
     <StyledLogo />
-    <StyledFilter />
+    <StyledFilterPanel />
     <StyledMain />
   </>
 );

@@ -1,3 +1,13 @@
+export interface ISearchIdState {
+  isLoading: boolean;
+  hasError: boolean;
+  value: string;
+}
+
+export interface ISearchIdResponse {
+  searchId: string;
+}
+
 export interface ISegment {
   origin: string;
   destination: string;
@@ -20,17 +30,9 @@ export interface ITicketsState {
   value: ITicket[];
 }
 
-export interface ISearchIdState extends Pick<ITicketsState, 'isLoading' | 'hasError'> {
-  value: string;
-}
-
 export interface ITicketsResponse {
   tickets: ITicket[];
   stop: boolean;
 }
 
-export interface ISearchIdResponse {
-  searchId: string;
-}
-
-export type TSort = 'cheapest' | 'fastest' | 'optimal';
+export type TSortingParameter = 'cheapest' | 'fastest' | 'optimal';

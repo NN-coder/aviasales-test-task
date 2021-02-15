@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
-import { store } from '../../../store';
+import { sortedTicketsStore } from '../../../stores';
 import { StandardBlock } from '../../StandardBlock';
 
 const activeBtnStyles = css`
@@ -36,24 +36,33 @@ export interface IProps {
   className?: string;
 }
 
-const Sort: React.FC<IProps> = observer(({ className }) => {
-  const { currentSort, setCurrentSort } = store;
+const SortingPanel: React.FC<IProps> = observer(({ className }) => {
+  const { currentSortingParameter, setCurrentSortingParameter } = sortedTicketsStore;
 
   return (
     <StandardBlock className={className}>
-      <SortBtn active={currentSort === 'cheapest'} onClick={() => setCurrentSort('cheapest')}>
+      <SortBtn
+        active={currentSortingParameter === 'cheapest'}
+        onClick={() => setCurrentSortingParameter('cheapest')}
+      >
         Самый дешевый
       </SortBtn>
-      <SortBtn active={currentSort === 'fastest'} onClick={() => setCurrentSort('fastest')}>
+      <SortBtn
+        active={currentSortingParameter === 'fastest'}
+        onClick={() => setCurrentSortingParameter('fastest')}
+      >
         Самый быстрый
       </SortBtn>
-      <SortBtn active={currentSort === 'optimal'} onClick={() => setCurrentSort('optimal')}>
+      <SortBtn
+        active={currentSortingParameter === 'optimal'}
+        onClick={() => setCurrentSortingParameter('optimal')}
+      >
         Оптимальный
       </SortBtn>
     </StandardBlock>
   );
 });
 
-export const StyledSort = styled(Sort)`
+export const StyledSortingPanel = styled(SortingPanel)`
   display: flex;
 `;
