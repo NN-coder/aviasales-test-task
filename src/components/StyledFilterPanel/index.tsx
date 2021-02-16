@@ -41,7 +41,7 @@ interface Option {
   text: string;
 }
 
-const options: Option[] = [
+const filterButtonsOptions: Option[] = [
   { text: 'Все', key: shortid.generate() },
   { text: 'Без пересадок', key: shortid.generate() },
   { text: '1 пересадка', key: shortid.generate() },
@@ -59,13 +59,13 @@ const FilterPanel: React.FC<IProps> = ({ className }) => {
   const createClickHandler = useCallback((num: number) => {
     return () => {
       toggleCheck((prevState) => {
-        if (prevState.includes(num)) {
-          const newState = new Set(prevState);
-          newState.delete(num);
-          return Array.from(newState);
+        if (!prevState.includes(num)) {
+          return prevState.concat(num);
         }
 
-        return [...prevState, num];
+        const newState = prevState.slice();
+        newState.splice(newState.indexOf(num), 1);
+        return newState;
       });
     };
   }, []);
@@ -74,7 +74,7 @@ const FilterPanel: React.FC<IProps> = ({ className }) => {
     <StandardBlock as="aside" className={className}>
       <FilterTitle>Количество пересадок</FilterTitle>
       <ul role="listbox">
-        {options.map(({ text, key }, index) => (
+        {filterButtonsOptions.map(({ text, key }, index) => (
           <li key={key} role="option" aria-selected={checked.includes(index)}>
             <FilterCheck onClick={createClickHandler(index)} type="button">
               <FilterCheckBox checked={checked.includes(index)} />

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import { ITicket } from '../../../stores/types';
 import { StandardBlock } from '../../StandardBlock';
-import { StyledSegment } from './StyledSegment';
+import { StyledTicketSegments } from './StyledTicketSegments';
 
 const TicketHeader = styled.div`
   display: flex;
@@ -32,8 +32,7 @@ const Ticket: React.FC<IProps> = ({ price, carrier, segments, className }) => (
       <TicketImg src={`http://pics.avs.io/99/36/${carrier}.png`} alt="" />
     </TicketHeader>
 
-    <StyledSegment {...segments[0]} />
-    <StyledSegment {...segments[1]} />
+    <StyledTicketSegments segments={segments} />
   </StandardBlock>
 );
 

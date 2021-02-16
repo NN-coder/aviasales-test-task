@@ -16,10 +16,11 @@ class SearchIdStore {
     if (res.ok) {
       const resBody: ISearchIdResponse = await res.json();
       this.searchId = { isLoading: false, hasError: false, value: resBody.searchId };
-      return;
+    } else {
+      this.searchId = { ...this.searchId, isLoading: false, hasError: true };
     }
 
-    this.searchId = { ...this.searchId, isLoading: false, hasError: true };
+    return res.ok;
   }
 
   constructor() {

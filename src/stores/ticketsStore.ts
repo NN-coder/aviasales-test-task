@@ -15,7 +15,8 @@ class TicketsStore {
     this.tickets.isLoading = true;
 
     if (searchIdStore.searchId.isLoading || searchIdStore.searchId.hasError) {
-      await searchIdStore.fetchSearchId();
+      const isSearchIdRequestSuccessful = await searchIdStore.fetchSearchId();
+      if (!isSearchIdRequestSuccessful) return;
     }
 
     const res = await fetch(
@@ -34,10 +35,10 @@ class TicketsStore {
         hasError: false,
         value: this.tickets.value.concat(tickets),
       };
-      return;
+    } else {
+      this.tickets.isLoading = false;
+      this.tickets.hasError = true;
     }
-
-    this.tickets = { ...this.tickets, isLoading: false, hasError: true };
   }
 
   constructor() {

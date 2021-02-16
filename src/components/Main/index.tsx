@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
@@ -34,7 +35,6 @@ const Main: React.FC<IProps> = observer(({ className }) => {
 
   useEffect(() => {
     fetchTickets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showMoreTickets = useCallback(() => showTickets((prevVal) => prevVal + 5), []);

@@ -7,6 +7,11 @@ const getFlightTime = (ticket: ITicket) => {
   return seg1.duration + seg2.duration;
 };
 
+const getStopsCount = (ticket: ITicket) => {
+  const [seg1, seg2] = ticket.segments;
+  return seg1.stops.length + seg2.stops.length;
+};
+
 class SortedTicketsStore {
   currentSortingParameter: TSortingParameter = 'cheapest';
 
@@ -15,8 +20,8 @@ class SortedTicketsStore {
   }
 
   get sortedTickets() {
-    const tickets = ticketsStore.tickets.value.slice();
     const { currentSortingParameter } = this;
+    const tickets = ticketsStore.tickets.value.slice();
 
     if (currentSortingParameter === 'cheapest') {
       return tickets.sort((ticket1, ticket2) => ticket1.price - ticket2.price);
@@ -26,8 +31,7 @@ class SortedTicketsStore {
       return tickets.sort((ticket1, ticket2) => getFlightTime(ticket1) - getFlightTime(ticket2));
     }
 
-    // TODO: Understand what "Sort by optimality" means
-    return tickets;
+    return tickets.sort((ticket1, ticket2) => getStopsCount(ticket1) - getStopsCount(ticket2));
   }
 
   constructor() {
