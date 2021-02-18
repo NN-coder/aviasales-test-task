@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ticketsStore } from './ticketsStore';
-import { ITicket, TSortingParameter } from './types';
+import { ticketsStore, ITicket } from './ticketsStore';
+
+export type TSortingParameter = 'cheapest' | 'fastest' | 'optimal';
 
 const getFlightTime = (ticket: ITicket) => {
   const [seg1, seg2] = ticket.segments;
@@ -20,14 +21,13 @@ class SortedTicketsStore {
   }
 
   get sortedTickets() {
-    const { currentSortingParameter } = this;
-    const tickets = ticketsStore.tickets.value.slice();
+    const tickets = ticketsStore.tickets.slice();
 
-    if (currentSortingParameter === 'cheapest') {
+    if (this.currentSortingParameter === 'cheapest') {
       return tickets.sort((ticket1, ticket2) => ticket1.price - ticket2.price);
     }
 
-    if (currentSortingParameter === 'fastest') {
+    if (this.currentSortingParameter === 'fastest') {
       return tickets.sort((ticket1, ticket2) => getFlightTime(ticket1) - getFlightTime(ticket2));
     }
 

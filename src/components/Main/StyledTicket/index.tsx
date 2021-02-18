@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { ITicket } from '../../../stores/types';
+import { ITicket } from '../../../stores/ticketsStore';
 import { StandardBlock } from '../../StandardBlock';
 import { StyledTicketSegments } from './StyledTicketSegments';
 

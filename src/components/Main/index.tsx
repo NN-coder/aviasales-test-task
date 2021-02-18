@@ -1,14 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
 import { searchIdStore, ticketsStore, sortedTicketsStore } from '../../stores';
 import { StandardBlock } from '../StandardBlock';
-import { ErrorPlaceholder, LoadingPlaceholder } from './Placeholders';
+import { Placeholders } from './Placeholders';
 import { StyledSortingPanel } from './StyledSortingPanel';
 import { StyledTicket } from './StyledTicket';
 
-const MainBtn = styled(StandardBlock)`
+const MainBtn = styled(StandardBlock).attrs({
+  as: 'button',
+  type: 'button',
+})`
   height: 50px;
   color: white;
   font-weight: 600;
@@ -23,38 +25,30 @@ export interface IProps {
 }
 
 const Main: React.FC<IProps> = observer(({ className }) => {
-  const { searchId } = searchIdStore;
-  const { tickets, fetchTickets } = ticketsStore;
-  const { sortedTickets } = sortedTicketsStore;
-
-  const isLoading = searchId.isLoading || tickets.isLoading;
-  // Loading state prevails over the error state
-  const hasError = (searchId.hasError || tickets.hasError) && !isLoading;
-
-  const [ticketsToShow, showTickets] = useState(5);
+  const isLoading = searchIdStore.isLoading || ticketsStore.isLoading;
+  const hasError = searchIdStore.hasError || ticketsStore.hasError;
 
   useEffect(() => {
-    fetchTickets();
+    ticketsStore.fetchTickets();
   }, []);
 
+  const [ticketsToShow, showTickets] = useState(5);
   const showMoreTickets = useCallback(() => showTickets((prevVal) => prevVal + 5), []);
 
   return (
     <main className={className}>
       <StyledSortingPanel />
 
-      {sortedTickets.slice(0, ticketsToShow).map((ticket) => (
-        <StyledTicket key={ticket.id} {...ticket} />
-      ))}
+      {ticketsStore.isCompleted &&
+        sortedTicketsStore.sortedTickets
+          .slice(0, ticketsToShow)
+          .map((ticket) => <StyledTicket key={ticket.id} {...ticket} />)}
 
-      {isLoading && <LoadingPlaceholder />}
-      {hasError && <ErrorPlaceholder />}
+      <Placeholders isLoading={isLoading} hasError={hasError} />
 
-      {!tickets.isCompleted && (
-        <MainBtn as="button" type="button" onClick={hasError ? fetchTickets : showMoreTickets}>
-          {hasError ? 'Попробовать ещё раз' : 'Показать еще 5 билетов'}
-        </MainBtn>
-      )}
+      <MainBtn onClick={hasError ? ticketsStore.fetchTickets : showMoreTickets}>
+        {hasError ? 'Попробовать ещё раз' : 'Показать еще 5 билетов'}
+      </MainBtn>
     </main>
   );
 });

@@ -1,43 +1,69 @@
-import { action, makeObservable, observable } from 'mobx';
+/* eslint-disable no-await-in-loop */
+import { action, makeObservable, observable, runInAction } from 'mobx';
 import shortid from 'shortid';
 import { searchIdStore } from './searchIdStore';
-import { ITicketsResponse, ITicketsState } from './types';
+
+export interface ISegment {
+  origin: string;
+  destination: string;
+  date: string;
+  stops: string[];
+  duration: number;
+}
+
+export interface ITicket {
+  price: number;
+  carrier: string;
+  segments: [ISegment, ISegment];
+  id: string;
+}
+
+interface ITicketsResponse {
+  tickets: ITicket[];
+  stop: boolean;
+}
 
 class TicketsStore {
-  tickets: ITicketsState = {
-    isLoading: true,
-    hasError: false,
-    isCompleted: false,
-    value: [],
-  };
+  isLoading = true;
+  hasError = false;
+  isCompleted = false;
+  tickets: ITicket[] = [];
+
+  private handleSuccessfulResponse(resBody: ITicketsResponse) {
+    const tickets = resBody.tickets.map((ticket) => ({ ...ticket, id: shortid.generate() }));
+
+    this.tickets = this.tickets.concat(tickets);
+    this.isCompleted = resBody.stop;
+    this.isLoading = !this.isCompleted;
+    this.hasError = false;
+  }
+
+  private handleFailedResponse() {
+    this.hasError = true;
+    this.isLoading = false;
+  }
 
   async fetchTickets() {
-    this.tickets.isLoading = true;
+    this.isLoading = true;
 
-    if (searchIdStore.searchId.isLoading || searchIdStore.searchId.hasError) {
-      const isSearchIdRequestSuccessful = await searchIdStore.fetchSearchId();
-      if (!isSearchIdRequestSuccessful) return;
+    if (searchIdStore.isLoading || searchIdStore.hasError) {
+      await searchIdStore.fetchSearchId();
+      if (searchIdStore.hasError) return;
     }
 
-    const res = await fetch(
-      `https://front-test.beta.aviasales.ru/tickets?searchId=${searchIdStore.searchId.value}`,
-      { method: 'GET' }
-    );
+    while (!this.isCompleted) {
+      const res = await fetch(
+        `https://front-test.beta.aviasales.ru/tickets?searchId=${searchIdStore.searchId}`,
+        { method: 'GET' }
+      );
 
-    if (res.ok) {
-      const resBody: ITicketsResponse = await res.json();
-
-      const tickets = resBody.tickets.map((ticket) => ({ ...ticket, id: shortid.generate() }));
-
-      this.tickets = {
-        isLoading: false,
-        isCompleted: resBody.stop,
-        hasError: false,
-        value: this.tickets.value.concat(tickets),
-      };
-    } else {
-      this.tickets.isLoading = false;
-      this.tickets.hasError = true;
+      if (res.ok) {
+        const resBody: ITicketsResponse = await res.json();
+        runInAction(() => this.handleSuccessfulResponse(resBody));
+      } else {
+        runInAction(() => this.handleFailedResponse());
+        break;
+      }
     }
   }
 
@@ -45,6 +71,9 @@ class TicketsStore {
     this.fetchTickets = this.fetchTickets.bind(this);
 
     makeObservable(this, {
+      isLoading: observable,
+      hasError: observable,
+      isCompleted: observable,
       tickets: observable,
       fetchTickets: action,
     });

@@ -1,26 +1,38 @@
-import { action, makeObservable, observable } from 'mobx';
-import { ISearchIdResponse, ISearchIdState } from './types';
+import { action, makeObservable, observable, runInAction } from 'mobx';
+
+interface ISearchIdResponse {
+  searchId: string;
+}
 
 class SearchIdStore {
-  searchId: ISearchIdState = {
-    isLoading: true,
-    hasError: false,
-    value: '',
-  };
+  searchId = '';
+  isLoading = true;
+  hasError = false;
+
+  private handleSuccessfulResponse(resBody: ISearchIdResponse) {
+    this.isLoading = false;
+    this.hasError = false;
+    this.searchId = resBody.searchId;
+  }
+
+  private handleFailedResponse() {
+    this.isLoading = false;
+    this.hasError = true;
+  }
 
   async fetchSearchId() {
-    this.searchId.isLoading = true;
+    this.isLoading = true;
 
     const res = await fetch('https://front-test.beta.aviasales.ru/search', { method: 'GET' });
 
     if (res.ok) {
       const resBody: ISearchIdResponse = await res.json();
-      this.searchId = { isLoading: false, hasError: false, value: resBody.searchId };
+      runInAction(() => this.handleSuccessfulResponse(resBody));
     } else {
-      this.searchId = { ...this.searchId, isLoading: false, hasError: true };
+      runInAction(() => this.handleFailedResponse());
     }
 
-    return res.ok;
+    // return res.ok;
   }
 
   constructor() {
@@ -28,6 +40,8 @@ class SearchIdStore {
 
     makeObservable(this, {
       searchId: observable,
+      isLoading: observable,
+      hasError: observable,
       fetchSearchId: action,
     });
   }

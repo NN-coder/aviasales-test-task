@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { ISegment } from '../../../../stores/types';
+import { ISegment } from '../../../../stores/ticketsStore';
 import { getTimeFromMins, getRouteTime, getStopsCountInCorrectForm } from './utils';
 
 const SegmentItem = styled.div`
@@ -23,8 +23,8 @@ export interface IProps {
 
 const TicketSegments: React.FC<IProps> = ({ className, segments }) => (
   <div className={className}>
-    {segments.map(({ stops, duration, origin, destination, date }, index) => (
-      <React.Fragment key={+index}>
+    {segments.map(({ stops, duration, origin, destination, date }) => (
+      <React.Fragment key={duration}>
         <SegmentItem>
           <SegmentTitle>{`${origin} - ${destination}`}</SegmentTitle>
           <SegmentValue>{getRouteTime(date, duration * 60000)}</SegmentValue>

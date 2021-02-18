@@ -30,16 +30,27 @@ const LoadingIcon = styled(ErrorIcon).attrs({ as: AiOutlineLoading3Quarters })`
   animation: ${rotate} 0.8s linear infinite;
 `;
 
-export const ErrorPlaceholder: React.FC = () => (
+const ErrorPlaceholder = (
   <Placeholder>
     <ErrorIcon />
     Упс, что-то пошло не так!
   </Placeholder>
 );
 
-export const LoadingPlaceholder: React.FC = () => (
+const LoadingPlaceholder = (
   <Placeholder>
     <LoadingIcon />
     Загрузка...
   </Placeholder>
 );
+
+export interface IProps {
+  isLoading: boolean;
+  hasError: boolean;
+}
+
+export const Placeholders: React.FC<IProps> = ({ isLoading, hasError }) => {
+  if (isLoading) return LoadingPlaceholder;
+  if (hasError) return ErrorPlaceholder;
+  return null;
+};
