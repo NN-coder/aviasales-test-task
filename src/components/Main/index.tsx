@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
-import { searchIdStore, ticketsStore, sortedTicketsStore } from '../../stores';
+import { searchIdStore, ticketsStore, displayedTicketsStore } from '../../stores';
 import { StandardBlock } from '../StandardBlock';
 import { Placeholders } from './Placeholders';
 import { StyledSortingPanel } from './StyledSortingPanel';
 import { StyledTicket } from './StyledTicket';
 
-const MainBtn = styled(StandardBlock).attrs({
-  as: 'button',
-  type: 'button',
-})`
+const MainBtn = styled(StandardBlock)`
   height: 50px;
   color: white;
   font-weight: 600;
@@ -25,30 +23,32 @@ export interface IProps {
 }
 
 const Main: React.FC<IProps> = observer(({ className }) => {
+  const { isCompleted, fetchTickets } = ticketsStore;
+  const { displayedTickets, showMoreTickets } = displayedTicketsStore;
+
   const isLoading = searchIdStore.isLoading || ticketsStore.isLoading;
   const hasError = searchIdStore.hasError || ticketsStore.hasError;
 
   useEffect(() => {
-    ticketsStore.fetchTickets();
+    fetchTickets();
   }, []);
 
-  const [ticketsToShow, showTickets] = useState(5);
-  const showMoreTickets = useCallback(() => showTickets((prevVal) => prevVal + 5), []);
+  const getBtnProps = (): React.DOMAttributes<HTMLButtonElement> => {
+    if (hasError) return { onClick: fetchTickets, children: 'Попробовать ещё раз' };
+    if (!isLoading) return { onClick: showMoreTickets, children: 'Показать ещё 5 билетов' };
+    return { children: 'Подождите...' };
+  };
 
   return (
     <main className={className}>
       <StyledSortingPanel />
 
-      {ticketsStore.isCompleted &&
-        sortedTicketsStore.sortedTickets
-          .slice(0, ticketsToShow)
-          .map((ticket) => <StyledTicket key={ticket.id} {...ticket} />)}
+      {isCompleted &&
+        displayedTickets.map((ticket) => <StyledTicket key={ticket.id} {...ticket} />)}
 
       <Placeholders isLoading={isLoading} hasError={hasError} />
 
-      <MainBtn onClick={hasError ? ticketsStore.fetchTickets : showMoreTickets}>
-        {hasError ? 'Попробовать ещё раз' : 'Показать еще 5 билетов'}
-      </MainBtn>
+      <MainBtn as="button" type="button" {...getBtnProps()} />
     </main>
   );
 });

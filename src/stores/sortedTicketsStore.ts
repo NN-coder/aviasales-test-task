@@ -13,6 +13,10 @@ const getStopsCount = (ticket: ITicket) => {
   return seg1.stops.length + seg2.stops.length;
 };
 
+type ISortedTicketsCache = {
+  [p in TSortingParameter]: ITicket[];
+};
+
 class SortedTicketsStore {
   currentSortingParameter: TSortingParameter = 'cheapest';
 
@@ -20,18 +24,34 @@ class SortedTicketsStore {
     this.currentSortingParameter = sortBy;
   }
 
-  get sortedTickets() {
-    const tickets = ticketsStore.tickets.slice();
+  private sortedTicketsCache: ISortedTicketsCache = {
+    cheapest: [],
+    fastest: [],
+    optimal: [],
+  };
 
+  private compareFunction(ticket1: ITicket, ticket2: ITicket) {
     if (this.currentSortingParameter === 'cheapest') {
-      return tickets.sort((ticket1, ticket2) => ticket1.price - ticket2.price);
+      return ticket1.price - ticket2.price;
     }
 
     if (this.currentSortingParameter === 'fastest') {
-      return tickets.sort((ticket1, ticket2) => getFlightTime(ticket1) - getFlightTime(ticket2));
+      return getFlightTime(ticket1) - getFlightTime(ticket2);
     }
 
-    return tickets.sort((ticket1, ticket2) => getStopsCount(ticket1) - getStopsCount(ticket2));
+    return getStopsCount(ticket1) - getStopsCount(ticket2);
+  }
+
+  get sortedTickets() {
+    const { currentSortingParameter } = this;
+
+    if (this.sortedTicketsCache[currentSortingParameter].length !== 0) {
+      return this.sortedTicketsCache[currentSortingParameter];
+    }
+
+    const tickets = ticketsStore.tickets.slice().sort(this.compareFunction.bind(this));
+    this.sortedTicketsCache[currentSortingParameter] = tickets;
+    return tickets;
   }
 
   constructor() {
