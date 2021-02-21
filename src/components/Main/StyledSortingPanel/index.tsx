@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
-import { sortedTicketsStore } from '../../../stores';
+import { useStoreContext } from '../../StoreContext';
 import { StandardBlock } from '../../StandardBlock';
 
 const activeBtnStyles = css`
@@ -37,7 +37,9 @@ export interface IProps {
 }
 
 const SortingPanel: React.FC<IProps> = observer(({ className }) => {
-  const { currentSortingParameter, setCurrentSortingParameter } = sortedTicketsStore;
+  const {
+    sortedTicketsStore: { currentSortingParameter, setCurrentSortingParameter },
+  } = useStoreContext();
 
   return (
     <StandardBlock className={className}>

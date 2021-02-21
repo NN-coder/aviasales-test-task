@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { observer } from 'mobx-react-lite';
-import { searchIdStore, ticketsStore, displayedTicketsStore } from '../../stores';
+import { useStoreContext } from '../StoreContext';
 import { StandardBlock } from '../StandardBlock';
 import { Placeholders } from './Placeholders';
 import { StyledSortingPanel } from './StyledSortingPanel';
@@ -23,6 +23,8 @@ export interface IProps {
 }
 
 const Main: React.FC<IProps> = observer(({ className }) => {
+  const { searchIdStore, ticketsStore, displayedTicketsStore } = useStoreContext();
+
   const { isCompleted, fetchTickets } = ticketsStore;
   const { displayedTickets, showMoreTickets } = displayedTicketsStore;
 

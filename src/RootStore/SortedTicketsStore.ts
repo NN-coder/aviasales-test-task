@@ -1,7 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ticketsStore, ITicket } from './ticketsStore';
-
-export type TSortingParameter = 'cheapest' | 'fastest' | 'optimal';
+import { RootStore } from '.';
+import { ITicket, TSortingParameter } from './types';
 
 const getFlightTime = (ticket: ITicket) => {
   const [seg1, seg2] = ticket.segments;
@@ -13,18 +12,19 @@ const getStopsCount = (ticket: ITicket) => {
   return seg1.stops.length + seg2.stops.length;
 };
 
-type ISortedTicketsCache = {
+type TSortedTicketsCache = {
   [p in TSortingParameter]: ITicket[];
 };
 
-class SortedTicketsStore {
+export class SortedTicketsStore {
+  private rootStore: RootStore;
   currentSortingParameter: TSortingParameter = 'cheapest';
 
-  setCurrentSortingParameter(sortBy: TSortingParameter) {
-    this.currentSortingParameter = sortBy;
+  setCurrentSortingParameter(param: TSortingParameter): void {
+    this.currentSortingParameter = param;
   }
 
-  private sortedTicketsCache: ISortedTicketsCache = {
+  private sortedTicketsCache: TSortedTicketsCache = {
     cheapest: [],
     fastest: [],
     optimal: [],
@@ -42,19 +42,20 @@ class SortedTicketsStore {
     return getStopsCount(ticket1) - getStopsCount(ticket2);
   };
 
-  get sortedTickets() {
-    const { currentSortingParameter } = this;
-    const tickets = ticketsStore.tickets.slice();
+  get sortedTickets(): ITicket[] {
+    const { currentSortingParameter, sortedTicketsCache } = this;
+    const tickets = this.rootStore.ticketsStore.tickets.slice();
 
-    if (this.sortedTicketsCache[currentSortingParameter].length >= tickets.length) {
-      return this.sortedTicketsCache[currentSortingParameter];
+    if (sortedTicketsCache[currentSortingParameter].length >= tickets.length) {
+      return sortedTicketsCache[currentSortingParameter];
     }
 
-    this.sortedTicketsCache[currentSortingParameter] = tickets.sort(this.compareFunction);
+    sortedTicketsCache[currentSortingParameter] = tickets.sort(this.compareFunction);
     return tickets;
   }
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     this.setCurrentSortingParameter = this.setCurrentSortingParameter.bind(this);
 
     makeObservable(this, {
@@ -64,5 +65,3 @@ class SortedTicketsStore {
     });
   }
 }
-
-export const sortedTicketsStore = new SortedTicketsStore();

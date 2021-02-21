@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { ISegment } from '../../../../stores/ticketsStore';
+import { ISegment } from '../../../../RootStore/types';
 import { getTimeFromMins, getRouteTime, getStopsCountInCorrectForm } from './utils';
 
 const SegmentItem = styled.div`

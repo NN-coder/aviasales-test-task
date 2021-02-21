@@ -1,29 +1,16 @@
 /* eslint-disable no-await-in-loop */
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import shortid from 'shortid';
-import { searchIdStore } from './searchIdStore';
-
-export interface ISegment {
-  origin: string;
-  destination: string;
-  date: string;
-  stops: string[];
-  duration: number;
-}
-
-export interface ITicket {
-  price: number;
-  carrier: string;
-  segments: [ISegment, ISegment];
-  id: string;
-}
+import { RootStore } from '.';
+import { ITicket } from './types';
 
 interface ITicketsResponse {
-  tickets: ITicket[];
   stop: boolean;
+  tickets: ITicket[];
 }
 
-class TicketsStore {
+export class TicketsStore {
+  private rootStore: RootStore;
   isLoading = true;
   hasError = false;
   isCompleted = false;
@@ -43,7 +30,8 @@ class TicketsStore {
     this.isLoading = false;
   }
 
-  async fetchTickets() {
+  async fetchTickets(): Promise<void> {
+    const { searchIdStore } = this.rootStore;
     this.isLoading = true;
 
     if (searchIdStore.isLoading || searchIdStore.hasError) {
@@ -67,7 +55,8 @@ class TicketsStore {
     }
   }
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     this.fetchTickets = this.fetchTickets.bind(this);
 
     makeObservable(this, {
@@ -79,5 +68,3 @@ class TicketsStore {
     });
   }
 }
-
-export const ticketsStore = new TicketsStore();

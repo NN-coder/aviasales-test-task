@@ -1,10 +1,12 @@
 import { action, makeObservable, observable, runInAction } from 'mobx';
+import { RootStore } from '.';
 
 interface ISearchIdResponse {
   searchId: string;
 }
 
-class SearchIdStore {
+export class SearchIdStore {
+  private rootStore: RootStore;
   searchId = '';
   isLoading = true;
   hasError = false;
@@ -20,7 +22,7 @@ class SearchIdStore {
     this.hasError = true;
   }
 
-  async fetchSearchId() {
+  async fetchSearchId(): Promise<void> {
     this.isLoading = true;
 
     const res = await fetch('https://front-test.beta.aviasales.ru/search', { method: 'GET' });
@@ -31,11 +33,10 @@ class SearchIdStore {
     } else {
       runInAction(() => this.handleFailedResponse());
     }
-
-    // return res.ok;
   }
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
     this.fetchSearchId = this.fetchSearchId.bind(this);
 
     makeObservable(this, {
@@ -46,5 +47,3 @@ class SearchIdStore {
     });
   }
 }
-
-export const searchIdStore = new SearchIdStore();
