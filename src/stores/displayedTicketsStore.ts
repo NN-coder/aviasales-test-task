@@ -1,5 +1,5 @@
 import { makeObservable, action, observable, computed } from 'mobx';
-import { sortedTicketsStore } from './sortedTicketsStore';
+import { filteredTicketsStore } from './filteredTicketsStore';
 
 class DisplayedTicketsStore {
   numberOfTicketsDisplayed = 5;
@@ -9,7 +9,7 @@ class DisplayedTicketsStore {
   }
 
   get displayedTickets() {
-    return sortedTicketsStore.sortedTickets.slice(0, this.numberOfTicketsDisplayed);
+    return filteredTicketsStore.filteredTickets.slice(0, this.numberOfTicketsDisplayed);
   }
 
   constructor() {

@@ -30,7 +30,7 @@ class SortedTicketsStore {
     optimal: [],
   };
 
-  private compareFunction(ticket1: ITicket, ticket2: ITicket) {
+  private compareFunction = (ticket1: ITicket, ticket2: ITicket) => {
     if (this.currentSortingParameter === 'cheapest') {
       return ticket1.price - ticket2.price;
     }
@@ -40,17 +40,17 @@ class SortedTicketsStore {
     }
 
     return getStopsCount(ticket1) - getStopsCount(ticket2);
-  }
+  };
 
   get sortedTickets() {
     const { currentSortingParameter } = this;
+    const tickets = ticketsStore.tickets.slice();
 
-    if (this.sortedTicketsCache[currentSortingParameter].length !== 0) {
+    if (this.sortedTicketsCache[currentSortingParameter].length >= tickets.length) {
       return this.sortedTicketsCache[currentSortingParameter];
     }
 
-    const tickets = ticketsStore.tickets.slice().sort(this.compareFunction.bind(this));
-    this.sortedTicketsCache[currentSortingParameter] = tickets;
+    this.sortedTicketsCache[currentSortingParameter] = tickets.sort(this.compareFunction);
     return tickets;
   }
 
