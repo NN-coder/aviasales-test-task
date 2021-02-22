@@ -1,3 +1,4 @@
+/* eslint-disable no-unneeded-ternary */
 import { action, computed, makeObservable, observable } from 'mobx';
 import { RootStore } from '.';
 import { IFilterParameters, ITicket } from './types';
@@ -20,15 +21,10 @@ export class FilteredTicketsStore {
   ): void {
     const { stops } = this.currentFilterParameters;
 
-    if (actionType === 'toggle') {
-      stopsCountParams.forEach((stopsCount) => stops.set(stopsCount, !stops.get(stopsCount)));
-      return;
-    }
-
-    stopsCountParams.forEach((stopsCount) =>
-      // eslint-disable-next-line no-unneeded-ternary
-      stops.set(stopsCount, actionType === 'add' ? true : false)
-    );
+    stopsCountParams.forEach((stopsCount) => {
+      if (actionType === 'toggle') return stops.set(stopsCount, !stops.get(stopsCount));
+      return stops.set(stopsCount, actionType === 'add' ? true : false);
+    });
   }
 
   get filteredTickets(): ITicket[] {

@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import styled from 'styled-components/macro';
 import shortid from 'shortid';
 import { observer } from 'mobx-react-lite';
 import { useStoreContext } from '../StoreContext';
 import { StandardBlock } from '../StandardBlock';
 import { FilterPanelCheckBox, IProps as FilterPanelCheckBoxProps } from './FilterPanelCheckBox';
+import { IFilterParameters } from '../../RootStore/types';
 
 const FilterTitle = styled.div`
   margin-bottom: 10px;
@@ -50,17 +51,23 @@ const FilterPanel: React.FC<IProps> = observer(({ className }) => {
     [changeStopsFilterParameter]
   );
 
-  const getMainFilterPanelCheckBoxProps = (): FilterPanelCheckBoxProps => {
-    const isSelected = ![...currentFilterParameters.stops.values()].includes(false);
-    const handleClick = () => changeStopsFilterParameter(isSelected ? 'remove' : 'add', 0, 1, 2, 3);
-    return { isSelected, handleClick, text: 'Все' };
-  };
+  const getMainFilterPanelCheckBoxProps = useCallback(
+    (filterParams: IFilterParameters): FilterPanelCheckBoxProps => {
+      const isSelected = ![...filterParams.stops.values()].includes(false);
+      const handleClick = () => {
+        changeStopsFilterParameter(isSelected ? 'remove' : 'add', 0, 1, 2, 3);
+      };
+
+      return { isSelected, handleClick, text: 'Все' };
+    },
+    [changeStopsFilterParameter]
+  );
 
   return (
     <StandardBlock as="aside" className={className}>
       <FilterTitle>Количество пересадок</FilterTitle>
       <ul role="listbox">
-        <FilterPanelCheckBox {...getMainFilterPanelCheckBoxProps()} />
+        <FilterPanelCheckBox {...getMainFilterPanelCheckBoxProps(currentFilterParameters)} />
         {filterPanelButtonsOptions.map(({ text, key, handleClick }, index) => {
           const isSelected = !!currentFilterParameters.stops.get(index);
           return (
