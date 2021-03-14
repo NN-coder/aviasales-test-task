@@ -24,15 +24,27 @@ const GlobalStyle = createGlobalStyle`
     --light-blue: #f1fcff;
     --text-color: #4a4a4a;
     --text-color-primary: #a0b0b9;
+
+    @media (max-width: 500px) {
+      font-size: 9px;
+    }
+    @media (max-width: 400px) {
+      font-size: 8.5px;
+    }
   }
   #root {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 50px 20px;
     align-items: flex-start;
-    max-width: 960px;
+    max-width: 780px;
     margin: 0 auto;
-    padding: 50px 100px;
+    padding: 50px 10px;
+
+    @media (max-width: 800px) {
+      grid-template-columns: minmax(250px, 550px);
+      justify-content: center;
+    }
   }
   body {
     color: var(--text-color);
@@ -57,7 +69,7 @@ ReactDOM.render(
     <GlobalStyle />
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.querySelector('#root')
 );
 
 // eslint-disable-next-line no-console

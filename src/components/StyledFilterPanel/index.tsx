@@ -6,6 +6,7 @@ import { useStoreContext } from '../StoreContext';
 import { StandardBlock } from '../StandardBlock';
 import { FilterPanelCheckBox, IProps as FilterPanelCheckBoxProps } from './FilterPanelCheckBox';
 import { IFilterParameters } from '../../RootStore/types';
+import { getStopsCountInCorrectForm } from '../Main/StyledTicket/StyledTicketSegments/utils';
 
 const FilterTitle = styled.div`
   margin-bottom: 10px;
@@ -26,28 +27,12 @@ const FilterPanel: React.FC<IProps> = observer(({ className }) => {
   } = useStoreContext();
 
   const filterPanelButtonsOptions = useMemo(
-    () => [
-      {
-        text: 'Без пересадок',
+    () =>
+      [0, 1, 2, 3].map((stopsCount) => ({
+        text: getStopsCountInCorrectForm(stopsCount),
         key: shortid.generate(),
-        handleClick: () => changeStopsFilterParameter('toggle', 0),
-      },
-      {
-        text: '1 пересадка',
-        key: shortid.generate(),
-        handleClick: () => changeStopsFilterParameter('toggle', 1),
-      },
-      {
-        text: '2 пересадки',
-        key: shortid.generate(),
-        handleClick: () => changeStopsFilterParameter('toggle', 2),
-      },
-      {
-        text: '3 пересадки',
-        key: shortid.generate(),
-        handleClick: () => changeStopsFilterParameter('toggle', 3),
-      },
-    ],
+        handleClick: () => changeStopsFilterParameter('toggle', stopsCount),
+      })),
     [changeStopsFilterParameter]
   );
 

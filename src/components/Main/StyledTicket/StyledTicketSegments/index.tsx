@@ -8,12 +8,12 @@ const SegmentItem = styled.div`
 `;
 const SegmentTitle = styled.div`
   color: var(--text-color-primary);
-  font-size: 1.2rem;
+  font-size: 1em;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 `;
 const SegmentValue = styled.div`
-  font-size: 1.4rem;
+  font-size: 1.15em;
 `;
 
 export interface IProps {
@@ -50,4 +50,9 @@ export const StyledTicketSegments = styled(TicketSegments)`
   justify-content: space-between;
   padding-right: 50px;
   row-gap: 10px;
+  font-size: 1.2rem;
+
+  @media (max-width: 450px) {
+    padding-right: 15px;
+  }
 `;

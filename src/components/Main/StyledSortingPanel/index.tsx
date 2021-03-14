@@ -12,8 +12,8 @@ const activeBtnStyles = css`
 const SortBtn = styled.button.attrs({ type: 'button' })<{ active: boolean }>`
   width: 100%;
   height: 50px;
+  /* padding: 0 5px; */
   font-weight: 600;
-  font-size: 1.2rem;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   transition: 0.2s;
@@ -67,4 +67,5 @@ const SortingPanel: React.FC<IProps> = observer(({ className }) => {
 
 export const StyledSortingPanel = styled(SortingPanel)`
   display: flex;
+  font-size: 1.2rem;
 `;

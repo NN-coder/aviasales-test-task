@@ -42,15 +42,17 @@ const Main: React.FC<IProps> = observer(({ className }) => {
     fetchTickets();
   }, []);
 
-  const getBtnProps = (): React.DOMAttributes<HTMLButtonElement> => {
+  const getMainBtnProps = (): React.DOMAttributes<HTMLButtonElement> => {
+    if (isLoading) return { children: 'Подождите...' };
     if (hasError) return { onClick: fetchTickets, children: 'Попробовать ещё раз' };
+
     if (isEmpty)
       return {
         onClick: () => changeStopsFilterParameter('add', 0, 1, 2, 3),
         children: 'Расслабить фильтры',
       };
-    if (!isLoading) return { onClick: showMoreTickets, children: 'Показать ещё 5 билетов' };
-    return { children: 'Подождите...' };
+
+    return { onClick: showMoreTickets, children: 'Показать ещё 5 билетов' };
   };
 
   return (
@@ -62,7 +64,7 @@ const Main: React.FC<IProps> = observer(({ className }) => {
 
       <Placeholders {...{ isLoading, hasError, isEmpty }} />
 
-      <MainBtn as="button" type="button" {...getBtnProps()} />
+      <MainBtn as="button" type="button" {...getMainBtnProps()} />
     </main>
   );
 });
